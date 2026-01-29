@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>App Tỏ Tình ❤️</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        
+        .container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+        }
+        
+        h1 {
+            color: #e63946;
+            margin-bottom: 20px;
+            font-size: 28px;
+        }
+        
+        .heart {
+            font-size: 60px;
+            color: red;
+            margin: 20px 0;
+            animation: beat 1s infinite;
+        }
+        
+        @keyframes beat {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .message-box {
+            background: #fff5f7;
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border-left: 5px solid #e63946;
+        }
+        
+        button {
+            background: #e63946;
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 18px;
+            border-radius: 50px;
+            margin: 10px;
+            cursor: pointer;
+            width: 100%;
+        }
+        
+        #loveMessage {
+            font-size: 20px;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            display: none;
+        }
+        
+        .share-btn {
+            background: #4CAF50;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>❤️ APP TỎ TÌNH CỦA BẠN ❤️</h1>
+        
+        <div class="heart">❤️</div>
+        
+        <div class="message-box">
+            <p>Đây là app tỏ tình được tạo 100% bằng điện thoại!</p>
+            <p>Chúc bạn tỏ tình thành công 💘</p>
+        </div>
+        
+        <button onclick="showMessage()">💌 Xem lời tỏ tình</button>
+        <button onclick="changeHeart()">💝 Đổi màu trái tim</button>
+        <button onclick="shareApp()" class="share-btn">📤 Chia sẻ app</button>
+        
+        <div id="loveMessage">
+            <!-- Nội dung sẽ hiện ở đây -->
+        </div>
+    </div>
+
+    <script>
+        // Danh sách tin nhắn tỏ tình
+        const messages = [
+            "Bạn là điều tuyệt vời nhất! ❤️",
+            "Mỗi ngày bên bạn đều đáng nhớ! 🌟",
+            "Trái tim tôi thuộc về bạn! 💘",
+            "Cảm ơn vì đã đến bên tôi! 🙏",
+            "Tôi yêu bạn hơn mỗi ngày! 💕"
+        ];
+        
+        let heartColors = ['red', 'pink', 'purple', '#e63946', '#ff006e'];
+        let currentColor = 0;
+        
+        function showMessage() {
+            const randomIndex = Math.floor(Math.random() * messages.length);
+            const messageDiv = document.getElementById('loveMessage');
+            messageDiv.innerHTML = messages[randomIndex];
+            messageDiv.style.display = 'block';
+            
+            // Hiệu ứng
+            messageDiv.style.transform = 'scale(0)';
+            setTimeout(() => {
+                messageDiv.style.transform = 'scale(1)';
+                messageDiv.style.transition = 'transform 0.5s';
+            }, 100);
+        }
+        
+        function changeHeart() {
+            const heart = document.querySelector('.heart');
+            currentColor = (currentColor + 1) % heartColors.length;
+            heart.style.color = heartColors[currentColor];
+            
+            // Thêm trái tim bay
+            createFlyingHeart();
+        }
+        
+        function createFlyingHeart() {
+            const heart = document.createElement('div');
+            heart.innerHTML = '❤️';
+            heart.style.position = 'fixed';
+            heart.style.fontSize = '30px';
+            heart.style.color = heartColors[currentColor];
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.top = '100vh';
+            heart.style.zIndex = '-1';
+            
+            document.body.appendChild(heart);
+            
+            // Animation
+            const animation = heart.animate([
+                { transform: 'translateY(0) rotate(0deg)', opacity: 1 },
+                { transform: 'translateY(-100vh) rotate(360deg)', opacity: 0 }
+            ], {
+                duration: 3000,
+                easing: 'linear'
+            });
+            
+            animation.onfinish = () => heart.remove();
+        }
+        
+        function shareApp() {
+            const shareText = "Xem app tỏ tình tôi làm bằng điện thoại!";
+            const shareUrl = window.location.href;
+            
+            if(navigator.share) {
+                navigator.share({
+                    title: 'App Tỏ Tình',
+                    text: shareText,
+                    url: shareUrl
+                });
+            } else {
+                alert("Copy link này để chia sẻ:\n" + shareUrl);
+            }
+        }
+        
+        // Tạo vài trái tim bay lúc khởi động
+        for(let i = 0; i < 5; i++) {
+            setTimeout(createFlyingHeart, i * 300);
+        }
+        
+        // Kiểm tra thiết bị
+        const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+        if(isMobile) {
+            console.log("App đang chạy trên điện thoại!");
+        }
+    </script>
+</body>
+  </html>
